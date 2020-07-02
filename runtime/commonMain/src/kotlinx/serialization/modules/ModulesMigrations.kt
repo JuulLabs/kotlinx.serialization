@@ -5,8 +5,6 @@
 package kotlinx.serialization.modules
 
 import kotlinx.serialization.*
-import kotlinx.serialization.internal.*
-import kotlinx.serialization.internal.cast
 import kotlin.reflect.*
 
 private fun noImpl(): Nothing = throw UnsupportedOperationException("Not implemented, should not be called")
@@ -75,3 +73,17 @@ public fun <Base : Any> SerializersModuleCollector.defaultPolymorphic(
     baseClass: KClass<Base>,
     defaultSerializerProvider: (className: String) -> DeserializationStrategy<out Base>?
 ): Unit = noImpl()
+
+@Deprecated(
+    level = DeprecationLevel.ERROR,
+    message = "This method was removed during serialization 1.0 API stabilization",
+    replaceWith = ReplaceWith("getContextual(T::class) as KSerializer<T>")
+)
+public fun <T : Any> SerializersModule.getContextual(): KSerializer<T>? = noImpl()
+
+@Deprecated(
+    level = DeprecationLevel.ERROR,
+    message = "This method was removed during serialization 1.0 API stabilization",
+    replaceWith = ReplaceWith("getContextual(value::class) as KSerializer<T>")
+)
+public fun <T : Any> SerializersModule.getContextual(value: T): KSerializer<T>? = noImpl()

@@ -29,8 +29,8 @@ class ModuleBuildersTest {
 
     private fun SerializersModule.assertModuleHas(aSerializer: Boolean = false, bSerializer: Boolean = false) {
         with(this) {
-            assertSame(if (aSerializer) ASerializer else null, getContextual<A>())
-            assertSame(if (bSerializer) BSerializer else null, getContextual<B>())
+            assertSame(if (aSerializer) ASerializer else null, getContextual(A::class))
+            assertSame(if (bSerializer) BSerializer else null, getContextual(B::class))
         }
     }
 
@@ -104,7 +104,7 @@ class ModuleBuildersTest {
     fun testDSLFromKType() {
         if (isJs()) return // typeOf is not supported on JS
         val module = SerializersModule { contextual(A.serializer()) }
-        assertEquals(A.serializer(), module.getContextual<A>())
+        assertEquals(A.serializer(), module.getContextual(A::class))
     }
 
     @Test
@@ -239,7 +239,7 @@ class ModuleBuildersTest {
         val m1 = serializersModuleOf(A::class, A.serializer())
         val m2 = serializersModuleOf(A::class, A.serializer())
         val aggregate = m1 + m2
-        assertEquals(A.serializer(), aggregate.getContextual<A>())
+        assertEquals(A.serializer(), aggregate.getContextual(A::class))
     }
 
     @Test
@@ -255,8 +255,8 @@ class ModuleBuildersTest {
         val m1 = serializersModuleOf(Unit::class, delegate)
         val m2 = serializersModuleOf(Unit::class, delegate2)
         val aggregate = m1 + m2
-        assertEquals(delegate2, aggregate.getContextual<Unit>())
-        assertEquals(delegate, aggregate.getContextual<Unit>())
+        assertEquals(delegate2, aggregate.getContextual(Unit::class))
+        assertEquals(delegate, aggregate.getContextual(Unit::class))
     }
 
     @Test
