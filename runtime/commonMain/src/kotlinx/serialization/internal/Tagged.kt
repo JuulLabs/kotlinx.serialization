@@ -24,8 +24,8 @@ public abstract class TaggedEncoder<Tag : Any?> : Encoder, CompositeEncoder {
      */
     protected abstract fun SerialDescriptor.getTag(index: Int): Tag
 
-    override val context: SerialModule
-        get() = EmptyModule
+    override val context: SerializersModule
+        get() = EmptySerializersModule
 
     // ---- API ----
     protected open fun encodeTaggedValue(tag: Tag, value: Any): Unit =
@@ -187,8 +187,8 @@ public abstract class NamedValueEncoder(protected val rootName: String = "") : T
 @InternalSerializationApi
 public abstract class TaggedDecoder<Tag : Any?> : Decoder,
     CompositeDecoder {
-    override val context: SerialModule
-        get() = EmptyModule
+    override val context: SerializersModule
+        get() = EmptySerializersModule
 
     @Suppress("DEPRECATION")
     @Deprecated(updateModeDeprecated, level = DeprecationLevel.ERROR)

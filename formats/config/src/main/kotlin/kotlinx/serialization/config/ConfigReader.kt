@@ -21,23 +21,23 @@ private val SerialKind.objLike get() = this == StructureKind.CLASS || this == St
  * [HOCON][https://github.com/lightbend/config#using-hocon-the-json-superset].
  *
  * @param configuration configuration for a parser instance.
- * @param context A [SerialModule] which should contain registered serializers
+ * @param serializersModule A [SerializersModule] which should contain registered serializers
  * for [ContextualSerialization] and [Polymorphic] serialization, if you have any.
  */
 public class ConfigParser(
     private val configuration: ConfigParserConfiguration = ConfigParserConfiguration(),
-    override val context: SerialModule = EmptyModule
+    override val serializersModule: SerializersModule = EmptySerializersModule
 ) : SerialFormat {
 
-    public inline fun <reified T : Any> parse(conf: Config): T = parse(conf, context.getContextualOrDefault())
+    public inline fun <reified T : Any> parse(conf: Config): T = parse(conf, serializersModule.getContextualOrDefault())
 
     public fun <T> parse(conf: Config, deserializer: DeserializationStrategy<T>): T =
         ConfigReader(conf).decode(deserializer)
 
 
     private abstract inner class ConfigConverter<T> : TaggedDecoder<T>() {
-        override val context: SerialModule
-            get() = this@ConfigParser.context
+        override val context: SerializersModule
+            get() = this@ConfigParser.serializersModule
 
         abstract fun getTaggedConfigValue(tag: T): ConfigValue
 

@@ -1,6 +1,6 @@
 public abstract class kotlinx/serialization/AbstractSerialFormat : kotlinx/serialization/SerialFormat {
-	public fun <init> (Lkotlinx/serialization/modules/SerialModule;)V
-	public fun getContext ()Lkotlinx/serialization/modules/SerialModule;
+	public fun <init> (Lkotlinx/serialization/modules/SerializersModule;)V
+	public fun getSerializersModule ()Lkotlinx/serialization/modules/SerializersModule;
 }
 
 public abstract interface class kotlinx/serialization/BinaryFormat : kotlinx/serialization/SerialFormat {
@@ -31,7 +31,7 @@ public abstract interface class kotlinx/serialization/CompositeDecoder {
 	public abstract fun decodeStringElement (Lkotlinx/serialization/SerialDescriptor;I)Ljava/lang/String;
 	public abstract fun decodeUnitElement (Lkotlinx/serialization/SerialDescriptor;I)V
 	public abstract fun endStructure (Lkotlinx/serialization/SerialDescriptor;)V
-	public abstract fun getContext ()Lkotlinx/serialization/modules/SerialModule;
+	public abstract fun getContext ()Lkotlinx/serialization/modules/SerializersModule;
 	public abstract fun getUpdateMode ()Lkotlinx/serialization/UpdateMode;
 	public abstract fun updateNullableSerializableElement (Lkotlinx/serialization/SerialDescriptor;ILkotlinx/serialization/DeserializationStrategy;Ljava/lang/Object;)Ljava/lang/Object;
 	public abstract fun updateSerializableElement (Lkotlinx/serialization/SerialDescriptor;ILkotlinx/serialization/DeserializationStrategy;Ljava/lang/Object;)Ljava/lang/Object;
@@ -72,7 +72,7 @@ public abstract interface class kotlinx/serialization/CompositeEncoder {
 	public abstract fun encodeStringElement (Lkotlinx/serialization/SerialDescriptor;ILjava/lang/String;)V
 	public abstract fun encodeUnitElement (Lkotlinx/serialization/SerialDescriptor;I)V
 	public abstract fun endStructure (Lkotlinx/serialization/SerialDescriptor;)V
-	public abstract fun getContext ()Lkotlinx/serialization/modules/SerialModule;
+	public abstract fun getContext ()Lkotlinx/serialization/modules/SerializersModule;
 	public abstract fun shouldEncodeElementDefault (Lkotlinx/serialization/SerialDescriptor;I)Z
 }
 
@@ -115,7 +115,7 @@ public abstract interface class kotlinx/serialization/Decoder {
 	public abstract fun decodeShort ()S
 	public abstract fun decodeString ()Ljava/lang/String;
 	public abstract fun decodeUnit ()V
-	public abstract fun getContext ()Lkotlinx/serialization/modules/SerialModule;
+	public abstract fun getContext ()Lkotlinx/serialization/modules/SerializersModule;
 	public abstract fun getUpdateMode ()Lkotlinx/serialization/UpdateMode;
 	public abstract fun updateNullableSerializableValue (Lkotlinx/serialization/DeserializationStrategy;Ljava/lang/Object;)Ljava/lang/Object;
 	public abstract fun updateSerializableValue (Lkotlinx/serialization/DeserializationStrategy;Ljava/lang/Object;)Ljava/lang/Object;
@@ -162,7 +162,7 @@ public abstract interface class kotlinx/serialization/Encoder {
 	public abstract fun encodeShort (S)V
 	public abstract fun encodeString (Ljava/lang/String;)V
 	public abstract fun encodeUnit ()V
-	public abstract fun getContext ()Lkotlinx/serialization/modules/SerialModule;
+	public abstract fun getContext ()Lkotlinx/serialization/modules/SerializersModule;
 }
 
 public final class kotlinx/serialization/Encoder$DefaultImpls {
@@ -209,8 +209,9 @@ public final class kotlinx/serialization/MigrationsKt {
 	public static final fun dump (Lkotlinx/serialization/BinaryFormat;Lkotlinx/serialization/SerializationStrategy;Ljava/lang/Object;)[B
 	public static final fun dumps (Lkotlinx/serialization/BinaryFormat;Ljava/lang/Object;)Ljava/lang/String;
 	public static final fun dumps (Lkotlinx/serialization/BinaryFormat;Lkotlinx/serialization/SerializationStrategy;Ljava/lang/Object;)Ljava/lang/String;
-	public static final fun getContextualOrDefault (Lkotlinx/serialization/modules/SerialModule;Ljava/lang/Object;)Lkotlinx/serialization/KSerializer;
-	public static final fun getContextualOrDefault (Lkotlinx/serialization/modules/SerialModule;Lkotlin/reflect/KClass;)Lkotlinx/serialization/KSerializer;
+	public static final fun getContext (Lkotlinx/serialization/SerialFormat;)Lkotlinx/serialization/modules/SerializersModule;
+	public static final fun getContextualOrDefault (Lkotlinx/serialization/modules/SerializersModule;Ljava/lang/Object;)Lkotlinx/serialization/KSerializer;
+	public static final fun getContextualOrDefault (Lkotlinx/serialization/modules/SerializersModule;Lkotlin/reflect/KClass;)Lkotlinx/serialization/KSerializer;
 	public static final fun getList (Lkotlinx/serialization/KSerializer;)Lkotlinx/serialization/KSerializer;
 	public static final fun getMap (Lkotlin/Pair;)Lkotlinx/serialization/KSerializer;
 	public static final fun getNullable (Lkotlinx/serialization/KSerializer;)Lkotlinx/serialization/KSerializer;
@@ -365,7 +366,7 @@ public final class kotlinx/serialization/SerialDescriptorKt {
 }
 
 public abstract interface class kotlinx/serialization/SerialFormat {
-	public abstract fun getContext ()Lkotlinx/serialization/modules/SerialModule;
+	public abstract fun getSerializersModule ()Lkotlinx/serialization/modules/SerializersModule;
 }
 
 public final class kotlinx/serialization/SerialFormatKt {
@@ -525,7 +526,7 @@ public abstract class kotlinx/serialization/builtins/AbstractDecoder : kotlinx/s
 	public final fun decodeUnitElement (Lkotlinx/serialization/SerialDescriptor;I)V
 	public fun decodeValue ()Ljava/lang/Object;
 	public fun endStructure (Lkotlinx/serialization/SerialDescriptor;)V
-	public fun getContext ()Lkotlinx/serialization/modules/SerialModule;
+	public fun getContext ()Lkotlinx/serialization/modules/SerializersModule;
 	public fun getUpdateMode ()Lkotlinx/serialization/UpdateMode;
 	public fun updateNullableSerializableElement (Lkotlinx/serialization/SerialDescriptor;ILkotlinx/serialization/DeserializationStrategy;Ljava/lang/Object;)Ljava/lang/Object;
 	public fun updateNullableSerializableValue (Lkotlinx/serialization/DeserializationStrategy;Ljava/lang/Object;)Ljava/lang/Object;
@@ -569,7 +570,7 @@ public abstract class kotlinx/serialization/builtins/AbstractEncoder : kotlinx/s
 	public fun encodeUnit ()V
 	public final fun encodeUnitElement (Lkotlinx/serialization/SerialDescriptor;I)V
 	public fun encodeValue (Ljava/lang/Object;)V
-	public fun getContext ()Lkotlinx/serialization/modules/SerialModule;
+	public fun getContext ()Lkotlinx/serialization/modules/SerializersModule;
 	public fun shouldEncodeElementDefault (Lkotlinx/serialization/SerialDescriptor;I)Z
 }
 
@@ -1246,7 +1247,7 @@ public abstract class kotlinx/serialization/internal/TaggedDecoder : kotlinx/ser
 	public final fun decodeUnit ()V
 	public final fun decodeUnitElement (Lkotlinx/serialization/SerialDescriptor;I)V
 	public fun endStructure (Lkotlinx/serialization/SerialDescriptor;)V
-	public fun getContext ()Lkotlinx/serialization/modules/SerialModule;
+	public fun getContext ()Lkotlinx/serialization/modules/SerializersModule;
 	protected final fun getCurrentTag ()Ljava/lang/Object;
 	protected final fun getCurrentTagOrNull ()Ljava/lang/Object;
 	protected abstract fun getTag (Lkotlinx/serialization/SerialDescriptor;I)Ljava/lang/Object;
@@ -1309,7 +1310,7 @@ public abstract class kotlinx/serialization/internal/TaggedEncoder : kotlinx/ser
 	public final fun encodeUnitElement (Lkotlinx/serialization/SerialDescriptor;I)V
 	protected fun endEncode (Lkotlinx/serialization/SerialDescriptor;)V
 	public final fun endStructure (Lkotlinx/serialization/SerialDescriptor;)V
-	public fun getContext ()Lkotlinx/serialization/modules/SerialModule;
+	public fun getContext ()Lkotlinx/serialization/modules/SerializersModule;
 	protected final fun getCurrentTag ()Ljava/lang/Object;
 	protected final fun getCurrentTagOrNull ()Ljava/lang/Object;
 	protected abstract fun getTag (Lkotlinx/serialization/SerialDescriptor;I)Ljava/lang/Object;
@@ -1361,7 +1362,7 @@ public abstract class kotlinx/serialization/json/Json : kotlinx/serialization/St
 }
 
 public final class kotlinx/serialization/json/Json$Default : kotlinx/serialization/json/Json {
-	public fun getContext ()Lkotlinx/serialization/modules/SerialModule;
+	public fun getSerializersModule ()Lkotlinx/serialization/modules/SerializersModule;
 }
 
 public final class kotlinx/serialization/json/JsonArray : kotlinx/serialization/json/JsonElement, java/util/List, kotlin/jvm/internal/markers/KMappedMarker {
@@ -1437,7 +1438,7 @@ public final class kotlinx/serialization/json/JsonArraySerializer : kotlinx/seri
 public final class kotlinx/serialization/json/JsonBuilder {
 	public fun <init> ()V
 	public final fun buildConfiguration ()Lkotlinx/serialization/json/JsonConfiguration;
-	public final fun buildModule ()Lkotlinx/serialization/modules/SerialModule;
+	public final fun buildModule ()Lkotlinx/serialization/modules/SerializersModule;
 	public final fun getAllowStructuredMapKeys ()Z
 	public final fun getClassDiscriminator ()Ljava/lang/String;
 	public final fun getCoerceInputValues ()Z
@@ -1445,7 +1446,7 @@ public final class kotlinx/serialization/json/JsonBuilder {
 	public final fun getIgnoreUnknownKeys ()Z
 	public final fun getIndent ()Ljava/lang/String;
 	public final fun getPrettyPrint ()Z
-	public final fun getSerialModule ()Lkotlinx/serialization/modules/SerialModule;
+	public final fun getSerialModule ()Lkotlinx/serialization/modules/SerializersModule;
 	public final fun getSerializeSpecialFloatingPointValues ()Z
 	public final fun getStrictMode ()Z
 	public final fun getUnquoted ()Z
@@ -1460,7 +1461,7 @@ public final class kotlinx/serialization/json/JsonBuilder {
 	public final fun setIndent (Ljava/lang/String;)V
 	public final fun setLenient (Z)V
 	public final fun setPrettyPrint (Z)V
-	public final fun setSerialModule (Lkotlinx/serialization/modules/SerialModule;)V
+	public final fun setSerialModule (Lkotlinx/serialization/modules/SerializersModule;)V
 	public final fun setSerializeSpecialFloatingPointValues (Z)V
 	public final fun setStrictMode (Z)V
 	public final fun setUnquoted (Z)V
@@ -1599,8 +1600,8 @@ public abstract interface class kotlinx/serialization/json/JsonInput {
 
 public final class kotlinx/serialization/json/JsonKt {
 	public static final fun Json (Lkotlin/jvm/functions/Function1;)Lkotlinx/serialization/json/Json;
-	public static final fun Json (Lkotlinx/serialization/json/JsonConfiguration;Lkotlinx/serialization/modules/SerialModule;)Lkotlinx/serialization/json/Json;
-	public static synthetic fun Json$default (Lkotlinx/serialization/json/JsonConfiguration;Lkotlinx/serialization/modules/SerialModule;ILjava/lang/Object;)Lkotlinx/serialization/json/Json;
+	public static final fun Json (Lkotlinx/serialization/json/JsonConfiguration;Lkotlinx/serialization/modules/SerializersModule;)Lkotlinx/serialization/json/Json;
+	public static synthetic fun Json$default (Lkotlinx/serialization/json/JsonConfiguration;Lkotlinx/serialization/modules/SerializersModule;ILjava/lang/Object;)Lkotlinx/serialization/json/Json;
 }
 
 public final class kotlinx/serialization/json/JsonMigrationsKt {
@@ -1781,56 +1782,52 @@ public abstract class kotlinx/serialization/json/JsonTransformingSerializer : ko
 	protected fun writeTransform (Lkotlinx/serialization/json/JsonElement;)Lkotlinx/serialization/json/JsonElement;
 }
 
-public final class kotlinx/serialization/modules/EmptyModule : kotlinx/serialization/modules/SerialModule {
-	public static final field INSTANCE Lkotlinx/serialization/modules/EmptyModule;
-	public fun dumpTo (Lkotlinx/serialization/modules/SerialModuleCollector;)V
-	public fun getContextual (Lkotlin/reflect/KClass;)Lkotlinx/serialization/KSerializer;
-	public fun getPolymorphic (Lkotlin/reflect/KClass;Ljava/lang/Object;)Lkotlinx/serialization/SerializationStrategy;
-	public fun getPolymorphic (Lkotlin/reflect/KClass;Ljava/lang/String;)Lkotlinx/serialization/DeserializationStrategy;
-}
-
 public final class kotlinx/serialization/modules/PolymorphicModuleBuilder {
 	public final fun addSubclass (Lkotlin/reflect/KClass;Lkotlinx/serialization/KSerializer;)V
 	public final fun default (Lkotlin/jvm/functions/Function1;)V
 	public final fun with (Lkotlin/reflect/KClass;Lkotlinx/serialization/KSerializer;)V
 }
 
-public abstract class kotlinx/serialization/modules/SerialModule {
-	public abstract fun dumpTo (Lkotlinx/serialization/modules/SerialModuleCollector;)V
+public final class kotlinx/serialization/modules/SerialModuleBuildersKt {
+	public static final fun SerializersModule (Lkotlin/jvm/functions/Function1;)Lkotlinx/serialization/modules/SerializersModule;
+	public static final fun serializersModuleOf (Ljava/util/Map;)Lkotlinx/serialization/modules/SerializersModule;
+	public static final fun serializersModuleOf (Lkotlin/reflect/KClass;Lkotlinx/serialization/KSerializer;)Lkotlinx/serialization/modules/SerializersModule;
+}
+
+public final class kotlinx/serialization/modules/SerialModuleExtensionsKt {
+	public static final fun getContextual (Lkotlinx/serialization/modules/SerializersModule;Ljava/lang/Object;)Lkotlinx/serialization/KSerializer;
+	public static final fun getContextualDescriptor (Lkotlinx/serialization/modules/SerializersModule;Lkotlinx/serialization/SerialDescriptor;)Lkotlinx/serialization/SerialDescriptor;
+	public static final fun getContextualOrDefault (Lkotlinx/serialization/modules/SerializersModule;Lkotlin/reflect/KType;)Lkotlinx/serialization/KSerializer;
+	public static final fun getPolymorphicDescriptors (Lkotlinx/serialization/modules/SerializersModule;Lkotlinx/serialization/SerialDescriptor;)Ljava/util/List;
+	public static final fun overwriteWith (Lkotlinx/serialization/modules/SerializersModule;Lkotlinx/serialization/modules/SerializersModule;)Lkotlinx/serialization/modules/SerializersModule;
+	public static final fun plus (Lkotlinx/serialization/modules/SerializersModule;Lkotlinx/serialization/modules/SerializersModule;)Lkotlinx/serialization/modules/SerializersModule;
+}
+
+public abstract class kotlinx/serialization/modules/SerializersModule {
+	public abstract fun dumpTo (Lkotlinx/serialization/modules/SerializersModuleCollector;)V
 	public abstract fun getContextual (Lkotlin/reflect/KClass;)Lkotlinx/serialization/KSerializer;
 	public abstract fun getPolymorphic (Lkotlin/reflect/KClass;Ljava/lang/Object;)Lkotlinx/serialization/SerializationStrategy;
 	public abstract fun getPolymorphic (Lkotlin/reflect/KClass;Ljava/lang/String;)Lkotlinx/serialization/DeserializationStrategy;
 }
 
-public final class kotlinx/serialization/modules/SerialModuleBuildersKt {
-	public static final fun SerializersModule (Lkotlin/jvm/functions/Function1;)Lkotlinx/serialization/modules/SerialModule;
-	public static final fun serializersModuleOf (Ljava/util/Map;)Lkotlinx/serialization/modules/SerialModule;
-	public static final fun serializersModuleOf (Lkotlin/reflect/KClass;Lkotlinx/serialization/KSerializer;)Lkotlinx/serialization/modules/SerialModule;
-}
-
-public abstract interface class kotlinx/serialization/modules/SerialModuleCollector {
-	public abstract fun contextual (Lkotlin/reflect/KClass;Lkotlinx/serialization/KSerializer;)V
-	public abstract fun defaultPolymorphic (Lkotlin/reflect/KClass;Lkotlin/jvm/functions/Function1;)V
-	public abstract fun polymorphic (Lkotlin/reflect/KClass;Lkotlin/reflect/KClass;Lkotlinx/serialization/KSerializer;)V
-}
-
-public final class kotlinx/serialization/modules/SerialModuleExtensionsKt {
-	public static final fun getContextual (Lkotlinx/serialization/modules/SerialModule;Ljava/lang/Object;)Lkotlinx/serialization/KSerializer;
-	public static final fun getContextualDescriptor (Lkotlinx/serialization/modules/SerialModule;Lkotlinx/serialization/SerialDescriptor;)Lkotlinx/serialization/SerialDescriptor;
-	public static final fun getContextualOrDefault (Lkotlinx/serialization/modules/SerialModule;Lkotlin/reflect/KType;)Lkotlinx/serialization/KSerializer;
-	public static final fun getPolymorphicDescriptors (Lkotlinx/serialization/modules/SerialModule;Lkotlinx/serialization/SerialDescriptor;)Ljava/util/List;
-	public static final fun overwriteWith (Lkotlinx/serialization/modules/SerialModule;Lkotlinx/serialization/modules/SerialModule;)Lkotlinx/serialization/modules/SerialModule;
-	public static final fun plus (Lkotlinx/serialization/modules/SerialModule;Lkotlinx/serialization/modules/SerialModule;)Lkotlinx/serialization/modules/SerialModule;
-}
-
-public final class kotlinx/serialization/modules/SerializersModuleBuilder : kotlinx/serialization/modules/SerialModuleCollector {
+public final class kotlinx/serialization/modules/SerializersModuleBuilder : kotlinx/serialization/modules/SerializersModuleCollector {
 	public fun contextual (Lkotlin/reflect/KClass;Lkotlinx/serialization/KSerializer;)V
 	public fun defaultPolymorphic (Lkotlin/reflect/KClass;Lkotlin/jvm/functions/Function1;)V
-	public final fun include (Lkotlinx/serialization/modules/SerialModule;)V
+	public final fun include (Lkotlinx/serialization/modules/SerializersModule;)V
 	public fun polymorphic (Lkotlin/reflect/KClass;Lkotlin/reflect/KClass;Lkotlinx/serialization/KSerializer;)V
 	public final fun polymorphic (Lkotlin/reflect/KClass;Lkotlinx/serialization/KSerializer;Lkotlin/jvm/functions/Function1;)V
 	public final fun polymorphic (Lkotlin/reflect/KClass;[Lkotlin/reflect/KClass;Lkotlin/jvm/functions/Function1;)V
 	public static synthetic fun polymorphic$default (Lkotlinx/serialization/modules/SerializersModuleBuilder;Lkotlin/reflect/KClass;Lkotlinx/serialization/KSerializer;Lkotlin/jvm/functions/Function1;ILjava/lang/Object;)V
 	public static synthetic fun polymorphic$default (Lkotlinx/serialization/modules/SerializersModuleBuilder;Lkotlin/reflect/KClass;[Lkotlin/reflect/KClass;Lkotlin/jvm/functions/Function1;ILjava/lang/Object;)V
+}
+
+public abstract interface class kotlinx/serialization/modules/SerializersModuleCollector {
+	public abstract fun contextual (Lkotlin/reflect/KClass;Lkotlinx/serialization/KSerializer;)V
+	public abstract fun defaultPolymorphic (Lkotlin/reflect/KClass;Lkotlin/jvm/functions/Function1;)V
+	public abstract fun polymorphic (Lkotlin/reflect/KClass;Lkotlin/reflect/KClass;Lkotlinx/serialization/KSerializer;)V
+}
+
+public final class kotlinx/serialization/modules/SerializersModuleKt {
+	public static final fun getEmptySerializersModule ()Lkotlinx/serialization/modules/SerializersModule;
 }
 

@@ -14,8 +14,8 @@ import kotlinx.serialization.modules.*
  * See [Decoder] documentation for information about each particular `decode*` method.
  */
 public abstract class AbstractDecoder : Decoder, CompositeDecoder {
-    override val context: SerialModule
-        get() = EmptyModule
+    override val context: SerializersModule
+        get() = EmptySerializersModule
 
     @Suppress("DEPRECATION")
     @Deprecated(updateModeDeprecated, level = DeprecationLevel.ERROR)
