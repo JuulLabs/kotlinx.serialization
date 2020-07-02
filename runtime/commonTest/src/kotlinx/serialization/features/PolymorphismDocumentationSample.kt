@@ -8,7 +8,7 @@ import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 import kotlinx.serialization.json.Json
 import kotlinx.serialization.json.JsonConfiguration
-import kotlinx.serialization.modules.SerializersModule
+import kotlinx.serialization.modules.*
 import kotlinx.serialization.test.assertStringFormAndRestored
 import kotlin.test.Test
 

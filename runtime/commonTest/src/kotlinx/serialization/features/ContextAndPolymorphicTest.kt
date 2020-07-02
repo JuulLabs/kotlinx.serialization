@@ -87,8 +87,8 @@ class ContextAndPolymorphicTest {
 
     @Test
     fun testDifferentRepresentations() {
-        val simpleModule = serializersModule(PayloadSerializer)
-        val binaryModule = serializersModule(BinaryPayloadSerializer)
+        val simpleModule = serializersModuleOf(PayloadSerializer)
+        val binaryModule = serializersModuleOf(BinaryPayloadSerializer)
 
         val json1 = Json { useArrayPolymorphism = true; serialModule = simpleModule }
         val json2 = Json { useArrayPolymorphism = true; serialModule = binaryModule }
@@ -108,8 +108,8 @@ class ContextAndPolymorphicTest {
 
     @Test
     fun testResolveContextualDescriptor() {
-        val simpleModule = serializersModule(PayloadSerializer)
-        val binaryModule = serializersModule(BinaryPayloadSerializer)
+        val simpleModule = serializersModuleOf(PayloadSerializer)
+        val binaryModule = serializersModuleOf(BinaryPayloadSerializer)
 
         val contextDesc = EnhancedData.serializer().descriptor.elementDescriptors()[1] // @ContextualSer stringPayload
         assertEquals(UnionKind.CONTEXTUAL, contextDesc.kind)

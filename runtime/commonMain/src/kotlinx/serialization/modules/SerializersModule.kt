@@ -110,7 +110,7 @@ internal class SerialModuleImpl(
         }
 
         polyBase2DefaultProvider.forEach { (baseClass, provider) ->
-            collector.defaultPolymorphic(baseClass as KClass<Any>, provider as (PolymorphicProvider<out Any>))
+            collector.polymorphicDefault(baseClass as KClass<Any>, provider as (PolymorphicProvider<out Any>))
         }
     }
 }

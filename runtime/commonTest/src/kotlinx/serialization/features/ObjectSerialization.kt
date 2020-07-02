@@ -7,7 +7,7 @@ package kotlinx.serialization.features
 import kotlinx.serialization.*
 import kotlinx.serialization.json.Json
 import kotlinx.serialization.json.JsonTestBase
-import kotlinx.serialization.modules.SerializersModule
+import kotlinx.serialization.modules.*
 import kotlin.test.Test
 
 class ObjectSerializationTest : JsonTestBase() {

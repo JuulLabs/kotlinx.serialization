@@ -5,7 +5,7 @@
 package kotlinx.serialization
 
 import kotlinx.serialization.json.*
-import kotlinx.serialization.modules.SerializersModule
+import kotlinx.serialization.modules.*
 
 @Serializable
 open class PolyBase(val id: Int) {

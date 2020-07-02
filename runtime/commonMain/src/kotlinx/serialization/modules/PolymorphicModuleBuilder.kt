@@ -26,38 +26,17 @@ public class PolymorphicModuleBuilder<Base : Any> internal constructor(
     /**
      * Adds a [subclass] [serializer] to the resulting module under the initial [baseClass].
      */
-    public fun <T : Base> addSubclass(subclass: KClass<T>, serializer: KSerializer<T>) {
+    public fun <T : Base> subclass(subclass: KClass<T>, serializer: KSerializer<T>) {
         subclasses.add(subclass to serializer)
     }
 
-    /**
-     * @see addSubclass
-     */
-    @Deprecated(
-        message = "Use 'subclass(serializer)' instead",
-        level = DeprecationLevel.ERROR,
-        replaceWith = ReplaceWith("subclass(serializer)")
-    )
-    public inline fun <reified T : Base> addSubclass(serializer: KSerializer<T>): Unit =
-        addSubclass(T::class, serializer)
-
     public inline fun <reified T : Base> subclass(serializer: KSerializer<T>): Unit =
-        addSubclass(T::class, serializer)
+        subclass(T::class, serializer)
 
     /**
-     * @see addSubclass
+     * @see subclass
      */
-    @Deprecated(
-        message = "Use 'subclass' instead",
-        level = DeprecationLevel.ERROR,
-        replaceWith = ReplaceWith("subclass<T>()")
-    )
-    public inline fun <reified T : Base> addSubclass(): Unit = addSubclass(T::class, serializer())
-
-    /**
-     * @see addSubclass
-     */
-    public inline fun <reified T : Base> subclass(): Unit = addSubclass(T::class, serializer())
+    public inline fun <reified T : Base> subclass(): Unit = subclass(T::class, serializer())
 
     /**
      * Registers serializer provider that will be invoked if no polymorphic serializer is present.
@@ -65,7 +44,7 @@ public class PolymorphicModuleBuilder<Base : Any> internal constructor(
      *
      * Typically, if the class is not registered in advance, it is not possible to know the structure of the unknown
      * type and have a precise serializer, so the default serializer has limited capabilities.
-     * To have a structural access to the unknown data, it is recommended to use [JsonTransformingSerializer]
+     * To have structural access to the unknown data, it is recommended to use [JsonTransformingSerializer]
      * or [JsonParametricSerializer] classes.
      */
     public fun default(defaultSerializerProvider: (className: String) -> DeserializationStrategy<out Base>?) {
@@ -74,11 +53,6 @@ public class PolymorphicModuleBuilder<Base : Any> internal constructor(
         }
         this.defaultSerializerProvider = defaultSerializerProvider
     }
-
-    /**
-     * @see addSubclass
-     */
-    public infix fun <T : Base> KClass<T>.with(serializer: KSerializer<T>): Unit = addSubclass(this, serializer)
 
     @Suppress("UNCHECKED_CAST")
     internal fun buildTo(builder: SerializersModuleBuilder) {
@@ -96,25 +70,26 @@ public class PolymorphicModuleBuilder<Base : Any> internal constructor(
         }
     }
 
-    /**
-     * Adds all subtypes of this builder to a new builder with a scope of [newBaseClass].
-     *
-     * If base type of this module had a serializer, adds it, too.
-     *
-     * @param newBaseClass A new base polymorphic type. Should be supertype of current [baseClass].
-     * @param newBaseClassSerializer Serializer for the new base type, if needed.
-     * @return A new builder with subclasses from this and [newBaseClass] as baseClass.
-     */
-    @Suppress("UNCHECKED_CAST")
-    internal fun <NewBase : Any> changeBase(
-        newBaseClass: KClass<NewBase>,
-        newBaseClassSerializer: KSerializer<NewBase>? = null
-    ): PolymorphicModuleBuilder<NewBase> {
-        val newModule = PolymorphicModuleBuilder(newBaseClass, newBaseClassSerializer)
-        baseSerializer?.let { newModule.addSubclass(baseClass as KClass<NewBase>, baseSerializer.cast()) }
-        subclasses.forEach { (k, v) ->
-            newModule.addSubclass(k as KClass<NewBase>, v as KSerializer<NewBase>)
-        }
-        return newModule
+    // Members migration
+
+    @Deprecated(
+        message = "Use 'subclass' instead",
+        level = DeprecationLevel.ERROR,
+        replaceWith = ReplaceWith("subclass<T>()")
+    )
+    public inline fun <reified T : Base> addSubclass(): Unit =
+        subclass(T::class, serializer())
+
+    @Deprecated(
+        message = "Use 'subclass(serializer)' instead",
+        level = DeprecationLevel.ERROR,
+        replaceWith = ReplaceWith("subclass(serializer)")
+    )
+    public inline fun <reified T : Base> addSubclass(serializer: KSerializer<T>): Unit =
+        subclass(T::class, serializer)
+
+    // TODO
+    public infix fun <T : Base> KClass<T>.with(serializer: KSerializer<T>): Unit {
+        subclass(this, serializer)
     }
 }

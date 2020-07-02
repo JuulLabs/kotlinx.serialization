@@ -2,6 +2,8 @@
  * Copyright 2017-2020 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license.
  */
 
+@file:Suppress("UNCHECKED_CAST")
+
 package kotlinx.serialization.modules
 
 import kotlinx.serialization.*
@@ -43,13 +45,16 @@ class ModuleBuildersTest {
 
     @Test
     fun testMapModule() {
-        val module1 = serializersModuleOf(mapOf(B::class to BSerializer))
+        val module1 = serializersModuleOf(BSerializer)
         module1.assertModuleHas(
             aSerializer = false,
             bSerializer = true
         )
 
-        serializersModuleOf(mapOf(A::class to ASerializer, B::class to BSerializer)).assertModuleHas(
+        SerializersModule {
+            contextual(ASerializer)
+            contextual(BSerializer)
+        }.assertModuleHas(
             aSerializer = true,
             bSerializer = true
         )
@@ -62,8 +67,8 @@ class ModuleBuildersTest {
 
     @Test
     fun testCompositeModule() {
-        val moduleA = serializersModule(ASerializer)
-        val moduleB = serializersModuleOf(mapOf(B::class to BSerializer))
+        val moduleA = serializersModuleOf(ASerializer)
+        val moduleB = serializersModuleOf(BSerializer)
 
         (moduleA + moduleB).assertModuleHas(
             aSerializer = true,
@@ -98,14 +103,14 @@ class ModuleBuildersTest {
     @Test
     fun testDSLFromKType() {
         if (isJs()) return // typeOf is not supported on JS
-        val module = SerializersModule { contextual<A>() }
+        val module = SerializersModule { contextual(A.serializer()) }
         assertEquals(A.serializer(), module.getContextual<A>())
     }
 
     @Test
     fun testPolymorphicDSL() {
         val module1 = SerializersModule {
-            polymorphic(PolyBase.serializer()) {
+            polymorphic(PolyBase::class, PolyBase.serializer()) {
                 PolyDerived::class with PolyDerived.serializer()
             }
             polymorphic(Any::class, baseSerializer = null) {
@@ -115,23 +120,21 @@ class ModuleBuildersTest {
         }
 
         val module2 = SerializersModule {
-            polymorphic(Any::class, PolyBase::class) {
+            polymorphic(Any::class) {
                 subclass(PolyBase.serializer())
                 subclass(PolyDerived.serializer())
             }
-        }
 
-        val module3 = SerializersModule {
-            polymorphic(PolyBase::class, Any::class) {
-                addSubclass(PolyBase::class, PolyBase.serializer())
-                addSubclass(PolyDerived::class, PolyDerived.serializer())
+            polymorphic(PolyBase::class) {
+                subclass(PolyBase.serializer())
+                subclass(PolyDerived.serializer())
             }
         }
 
         val base = PolyBase(10)
         val derived = PolyDerived("foo")
 
-        listOf(module1, module2, module3).forEachIndexed { index, module ->
+        listOf(module1, module2).forEachIndexed { index, module ->
             fun <Base : Any, T : Base> assertPoly(serializer: KSerializer<T>, base: KClass<Base>, obj: T) =
                 assertEquals(
                     serializer,
@@ -160,8 +163,8 @@ class ModuleBuildersTest {
 
     @Test
     fun testOverwriteIsRightBiased() {
-        val incorrect = serializersModuleOf(mapOf<KClass<*>, KSerializer<*>>(A::class to BSerializer))
-        val correct = serializersModuleOf(mapOf<KClass<*>, KSerializer<*>>(A::class to ASerializer))
+        val incorrect = serializersModuleOf(A::class as KClass<Any>, BSerializer as KSerializer<Any>)
+        val correct = serializersModuleOf(ASerializer)
         correct.assertModuleHas(aSerializer = true, bSerializer = false)
         val sum = incorrect overwriteWith correct
         sum.assertModuleHas(aSerializer = true, bSerializer = false)
@@ -169,8 +172,8 @@ class ModuleBuildersTest {
 
     @Test
     fun testPlusThrowsExceptionOnDuplication() {
-        val incorrect = serializersModuleOf(mapOf<KClass<*>, KSerializer<*>>(A::class to BSerializer))
-        val correct = serializersModuleOf(mapOf<KClass<*>, KSerializer<*>>(A::class to ASerializer))
+        val incorrect = serializersModuleOf(A::class as KClass<Any>, BSerializer as KSerializer<Any>)
+        val correct = serializersModuleOf(ASerializer)
         correct.assertModuleHas(aSerializer = true, bSerializer = false)
         assertFailsWith<IllegalArgumentException> {
             incorrect + correct
@@ -194,13 +197,13 @@ class ModuleBuildersTest {
     @Test
     fun testOverwriteWithDifferentSerialName() {
         val m1 = SerializersModule {
-            polymorphic<Any> {
-                addSubclass(C::class, CSerializer)
+            polymorphic<Any>(Any::class) {
+                subclass(C::class, CSerializer)
             }
         }
         val m2 = SerializersModule {
-            polymorphic<Any> {
-                addSubclass(C::class, C.serializer())
+            polymorphic<Any>(Any::class) {
+                subclass(C::class, C.serializer())
             }
         }
         assertEquals(CSerializer, m1.getPolymorphic(Any::class, serializedClassName = "AnotherName"))
@@ -214,13 +217,13 @@ class ModuleBuildersTest {
     @Test
     fun testOverwriteWithSameSerialName() {
         val m1 = SerializersModule {
-            polymorphic<Any> {
-                addSubclass(C::class, C.serializer())
+            polymorphic<Any>(Any::class) {
+                subclass(C::class, C.serializer())
             }
         }
         val m2 = SerializersModule {
-            polymorphic<Any> {
-                addSubclass(C::class, CSerializer2)
+            polymorphic<Any>(Any::class) {
+                subclass(C::class, CSerializer2)
             }
         }
         assertEquals(C.serializer(), m1.getPolymorphic(Any::class, serializedClassName = "C"))
@@ -258,8 +261,8 @@ class ModuleBuildersTest {
 
     @Test
     fun testThrowOnTheSamePolymorphicSerializer() {
-        val m1 = SerializersModule { polymorphic<Any> { A::class with A.serializer() } }
-        val m2 = SerializersModule { polymorphic<Any> { A::class with ASerializer } }
+        val m1 = SerializersModule { polymorphic<Any>(Any::class) { A::class with A.serializer() } }
+        val m2 = SerializersModule { polymorphic<Any>(Any::class) { A::class with ASerializer } }
         assertFailsWith<IllegalArgumentException> { m1 + m2 }
     }
 
@@ -274,8 +277,8 @@ class ModuleBuildersTest {
         }
 
         assertEquals(delegate as Any, delegate2 as Any)
-        val m1 = SerializersModule { polymorphic<Any> { Unit::class with delegate } }
-        val m2 = SerializersModule { polymorphic<Any> { Unit::class with delegate2 } }
+        val m1 = SerializersModule { polymorphic<Any>(Any::class) { Unit::class with delegate } }
+        val m2 = SerializersModule { polymorphic<Any>(Any::class) { Unit::class with delegate2 } }
         val aggregate = m1 + m2
         assertEquals(delegate2, aggregate.getPolymorphic(Any::class, Unit))
         assertEquals(delegate, aggregate.getPolymorphic(Any::class, Unit))
@@ -284,13 +287,13 @@ class ModuleBuildersTest {
     @Test
     fun testPolymorphicCollision() {
         val m1 = SerializersModule {
-            polymorphic<Any> {
+            polymorphic<Any>(Any::class) {
                 default { _ -> Unit.serializer() }
             }
         }
 
         val m2 = SerializersModule {
-            polymorphic<Any> {
+            polymorphic<Any>(Any::class) {
                 default { _ -> Unit.serializer() }
             }
         }
@@ -302,7 +305,7 @@ class ModuleBuildersTest {
     fun testNoPolymorphicCollision() {
         val defaultSerializerProvider = { _: String -> Unit.serializer() }
         val m1 = SerializersModule {
-            polymorphic<Any> {
+            polymorphic(Any::class) {
                 default(defaultSerializerProvider)
             }
         }
@@ -316,7 +319,7 @@ class ModuleBuildersTest {
         val serializer = object : KSerializer<Int> by Int.serializer() {}
 
         val module = SerializersModule {
-            polymorphic<Any> {
+            polymorphic(Any::class) {
                 subclass<Int>(serializer)
             }
         }
